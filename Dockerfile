@@ -1,11 +1,12 @@
-FROM tiangolo/uwsgi-nginx-flask:python3.6
+FROM python:3.6
 
-# copy over our requirements.txt file
-COPY requirements.txt /tmp/
+RUN apt update
 
-# upgrade pip and install required python packages
-RUN pip install -U pip
-RUN pip install -r /tmp/requirements.txt
+WORKDIR /app
+ADD requirements.txt /app/requirements.txt
+RUN pip install -r /app/requirements.txt
 
-# copy over our app code
-COPY ./app /app
+ADD . /app
+
+ENV PORT 8080
+CMD ["gunicorn", "app:app", "--config=config.py"]
