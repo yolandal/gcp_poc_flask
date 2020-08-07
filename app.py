@@ -1,48 +1,27 @@
-from flask import Flask, request
-import json
+from flask import Flask, request, jsonify
+from datetime import datetime
+
 import config
 
 app = Flask(__name__)
 
+
 @app.route("/")
 def welcome():
-    return "Welcome to Bell-GCP POC! The app has two end points: '/lob?lob=HP' and '/num?num=1'"
+    return "Welcome to Bell-GCP POC"
 
 
-@app.route("/lob", methods=['GET','POST'])
-def lob_to_num():
-    d = {
-        "HP": "1",
-        "Mob": "2",
-        "Int": "4",
-        "TV": "5"
-    }
-    r = request.args.get('lob')
+@app.route("/msg", methods=["POST"])
+def display_message():
 
-    if r not in ['HP','Mob','Int','TV']:
-        raise ValueError("Use one of the following numbers: ['HP','Mob','Int','TV']")
-    else:
-        result = d[str(r)]
+    payload = request.get_json(force=True)
 
-    return result
-
-
-@app.route("/num")
-def num_to_int():
-    d = {
-        "1": "HP",
-        "2": "Mob",
-        "4": "Int",
-        "5": "TV"
-    }
-    r = request.args.get('num')
-
-    if r not in ['1','2','4','5']:
-        raise ValueError("Use one of the following numbers: [1,2,4,5]")
-    else:
-        result = d[str(r)]
-
-    return result
+    output_payload = jsonify(
+        ts=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        sentiment='Static',
+        message=payload['message']
+    )
+    return output_payload
 
 
 if __name__ == "__main__":
