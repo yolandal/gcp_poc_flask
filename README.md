@@ -9,6 +9,9 @@ Image can be found in *Container Registry > Images*
 #### Deploy to GKE  
 >kubectl apply -f app.yaml
 
+May need to get authentication credentials for the cluster first
+>gcloud container clusters get-credentials flask-app-cluster --zone=us-central1-b
+
 Get deployed URL
 >kubectl get services -l name=flask-app-test
 
